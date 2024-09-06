@@ -39,6 +39,12 @@ public class PlayerMove : MonoBehaviour
     public float wallJumpingDuration = 0.4f;
     public Vector2 wallJumpingPower = new Vector2(8f, 16f);
 
+    [Header("CoyoteTime")]
+    public float coyoteTime = 0.2f;
+    public float coyoteTimeCounter;
+
+  
+
 
     private void Awake()
     {
@@ -51,6 +57,7 @@ public class PlayerMove : MonoBehaviour
         
         WallSlide();
         WallJump();
+
         if (!isWallJumping)
         {
             Flip();
@@ -85,13 +92,54 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
+    //void Jump()
+    //{
+    //    if (IsGround())
+    //    {
+    //        coyoteTimeCounter = coyoteTime;
+    //    }
+    //    else
+    //    {
+    //        coyoteTimeCounter -= Time.deltaTime;
+    //    }
+
+
+
+
+    //    if (Input.GetButtonDown("Jump") && IsGround() && coyoteTimeCounter > 0f)
+    //    {
+    //        rigid.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
+    //    }
+
+    //    if (Input.GetButtonDown("Jump") && IsGround() && coyoteTimeCounter < 0f)
+    //    {
+    //        rigid.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
+    //        coyoteTimeCounter = 0f;
+    //    }
+    //}
+
     void Jump()
+{
+    // Update Coyote Time counter if the player is grounded
+    if (IsGround())
     {
-        if (Input.GetButtonDown("Jump") && IsGround())
-        {
-            rigid.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
-        }
+        coyoteTimeCounter = coyoteTime;  // Reset the coyote time if grounded
     }
+    else
+    {
+        coyoteTimeCounter -= Time.deltaTime;  // Countdown the coyote time
+    }
+
+    // Jump if the player presses jump within the coyote time window
+    if (Input.GetButtonDown("Jump") && coyoteTimeCounter > 0f)
+    {
+            //rigid.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
+            rigid.velocity = Vector2.up * jumpPower;
+            coyoteTimeCounter = 0f;  // Reset coyote time counter after jumping
+    }
+
+    
+}
 
     bool IsGround()
     {
