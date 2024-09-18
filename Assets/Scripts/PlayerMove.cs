@@ -16,7 +16,7 @@ public class PlayerMove : MonoBehaviour
     float h;
     public int moveSpeed;
     bool isFacingRight = true;
-    public bool isGround;
+    
     public Transform groundCheck;
     public LayerMask groundLayer;
     public Vector2 boxSize;
@@ -43,16 +43,18 @@ public class PlayerMove : MonoBehaviour
     public float coyoteTime = 0.2f;
     public float coyoteTimeCounter;
 
+    [Header("JumpBuffer")]
+    public float jumpBufferTime = 0.5f;
+    public float jumpBufferTimeCounter;
+
   
-
-
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
     }
 
     private void Update()
-    {
+    {       
         Jump();
         
         WallSlide();
@@ -92,54 +94,40 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    //void Jump()
-    //{
-    //    if (IsGround())
-    //    {
-    //        coyoteTimeCounter = coyoteTime;
-    //    }
-    //    else
-    //    {
-    //        coyoteTimeCounter -= Time.deltaTime;
-    //    }
-
-
-
-
-    //    if (Input.GetButtonDown("Jump") && IsGround() && coyoteTimeCounter > 0f)
-    //    {
-    //        rigid.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
-    //    }
-
-    //    if (Input.GetButtonDown("Jump") && IsGround() && coyoteTimeCounter < 0f)
-    //    {
-    //        rigid.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
-    //        coyoteTimeCounter = 0f;
-    //    }
-    //}
-
     void Jump()
-{
-    // Update Coyote Time counter if the player is grounded
-    if (IsGround())
     {
-        coyoteTimeCounter = coyoteTime;  // Reset the coyote time if grounded
-    }
-    else
-    {
-        coyoteTimeCounter -= Time.deltaTime;  // Countdown the coyote time
-    }
 
-    // Jump if the player presses jump within the coyote time window
-    if (Input.GetButtonDown("Jump") && coyoteTimeCounter > 0f)
-    {
-            //rigid.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
+        if (IsGround())
+        {
+            coyoteTimeCounter = coyoteTime;
+
+        }
+        else
+        {
+            coyoteTimeCounter -= Time.deltaTime;
+        }
+
+        if (Input.GetButtonDown("Jump"))
+        {
+            jumpBufferTimeCounter = jumpBufferTime;
+        }
+        else
+        {
+            jumpBufferTimeCounter -= Time.deltaTime;
+        }
+
+           
+        if (jumpBufferTimeCounter > 0f && coyoteTimeCounter > 0f)
+        {
+                //rigid.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
             rigid.velocity = Vector2.up * jumpPower;
-            coyoteTimeCounter = 0f;  // Reset coyote time counter after jumping
-    }
+            coyoteTimeCounter = 0f;
+            jumpBufferTimeCounter = 0f;
+        }
+       
 
     
-}
+    }
 
     bool IsGround()
     {
