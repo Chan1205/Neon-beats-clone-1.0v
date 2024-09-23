@@ -7,6 +7,8 @@ TagManager:
   - Ground
   - Spike
   - JumpPlatform
+  - SmallJump
+  - DisappearPlat
   layers:
   - Default
   - TransparentFX
@@ -18,7 +20,7 @@ TagManager:
   - Wall
   - Ground
   - Spike
-  - 
+  - Player
   - 
   - 
   - 
@@ -43,4 +45,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Player
+    uniqueID: 698376517
     locked: 0

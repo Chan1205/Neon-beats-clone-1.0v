@@ -10,7 +10,7 @@ public class PlayerMove : MonoBehaviour
 
     public TextMeshProUGUI winText;
     public GameObject resetBtn;
-
+    public ParticleSystem dust;
 
     [Header("Move")]
     float h;
@@ -62,6 +62,7 @@ public class PlayerMove : MonoBehaviour
 
         if (!isWallJumping)
         {
+       
             Flip();
         }
     }
@@ -123,10 +124,11 @@ public class PlayerMove : MonoBehaviour
             rigid.velocity = Vector2.up * jumpPower;
             coyoteTimeCounter = 0f;
             jumpBufferTimeCounter = 0f;
+            CreateDust();
         }
-       
 
-    
+
+
     }
 
     bool IsGround()
@@ -149,7 +151,9 @@ public class PlayerMove : MonoBehaviour
             Vector3 localScale = transform.localScale;
             localScale.x *= -1f;
             transform.localScale = localScale;
+            CreateDust();
         }
+
     }
 
     bool WallCheck()
@@ -198,6 +202,7 @@ public class PlayerMove : MonoBehaviour
             isWallJumping = true;
             rigid.velocity = new Vector2(wallJumpingDirection * wallJumpingPower.x, wallJumpingPower.y);
             wallJumpingCounter = 0f;
+            CreateDust();
 
             if (transform.localScale.x != wallJumpingDirection)
             {
@@ -219,5 +224,23 @@ public class PlayerMove : MonoBehaviour
     public void VelocityZero()
     {
         rigid.velocity = Vector2.zero;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.gameObject.tag == "JumpPlatform")
+        {
+            rigid.velocity = Vector2.up * 35;
+        }
+
+        if(collision.gameObject.tag == "SmallJump")
+        {
+            rigid.velocity = Vector2.up * 20;
+        }
+    }
+
+    void CreateDust()
+    {
+        dust.Play();
     }
 }
