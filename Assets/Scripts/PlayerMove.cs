@@ -93,6 +93,14 @@ public class PlayerMove : MonoBehaviour
             winText.gameObject.SetActive(true);
             resetBtn.gameObject.SetActive(true);
         }
+
+        if (collision.gameObject.tag == "Line")
+        {
+            Time.timeScale = 0f;
+            winText.gameObject.SetActive(true);
+            winText.text = "Lost";
+            resetBtn.gameObject.SetActive(true);
+        }
     }
 
     void Jump()

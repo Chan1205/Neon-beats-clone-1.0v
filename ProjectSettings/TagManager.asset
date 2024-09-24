@@ -9,6 +9,7 @@ TagManager:
   - JumpPlatform
   - SmallJump
   - DisappearPlat
+  - Line
   layers:
   - Default
   - TransparentFX
