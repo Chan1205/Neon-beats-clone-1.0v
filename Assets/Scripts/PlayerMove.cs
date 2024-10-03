@@ -7,16 +7,22 @@ public class PlayerMove : MonoBehaviour
 {
     Rigidbody2D rigid;
     GameManager mangaer;
+    AudioSource audioSrc;
 
     public TextMeshProUGUI winText;
     public GameObject resetBtn;
     public ParticleSystem dust;
 
+
+    public AudioClip audioJump;
+    public AudioClip audioDie;
+    public AudioClip audioWin;
+
     [Header("Move")]
     float h;
     public int moveSpeed;
     bool isFacingRight = true;
-    
+
     public Transform groundCheck;
     public LayerMask groundLayer;
     public Vector2 boxSize;
@@ -47,10 +53,28 @@ public class PlayerMove : MonoBehaviour
     public float jumpBufferTime = 0.5f;
     public float jumpBufferTimeCounter;
 
-  
+
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
+        audioSrc = GetComponent<AudioSource>();
+    }
+
+    void PlaySound(string action)
+    {
+        switch (action)
+        {
+            case "JUMP":
+                audioSrc.clip = audioJump;
+                break;
+            case "DIE":
+                audioSrc.clip = audioDie;
+                break;
+            case "WIN":
+                audioSrc.clip = audioWin;
+                break;
+        }
+        audioSrc.Play();
     }
 
     private void Update()
@@ -85,6 +109,8 @@ public class PlayerMove : MonoBehaviour
             winText.gameObject.SetActive(true);
             winText.text = "Lost";
             resetBtn.gameObject.SetActive(true);
+
+            PlaySound("DIE");
         }
 
         if(collision.gameObject.tag == "Finish")
@@ -92,6 +118,7 @@ public class PlayerMove : MonoBehaviour
             Time.timeScale = 0f;
             winText.gameObject.SetActive(true);
             resetBtn.gameObject.SetActive(true);
+            PlaySound("WIN");
         }
 
         if (collision.gameObject.tag == "Line")
@@ -100,6 +127,7 @@ public class PlayerMove : MonoBehaviour
             winText.gameObject.SetActive(true);
             winText.text = "Lost";
             resetBtn.gameObject.SetActive(true);
+            PlaySound("DIE");
         }
     }
 
@@ -133,9 +161,10 @@ public class PlayerMove : MonoBehaviour
             coyoteTimeCounter = 0f;
             jumpBufferTimeCounter = 0f;
             CreateDust();
+            PlaySound("JUMP");
         }
 
-
+        
 
     }
 
@@ -211,6 +240,7 @@ public class PlayerMove : MonoBehaviour
             rigid.velocity = new Vector2(wallJumpingDirection * wallJumpingPower.x, wallJumpingPower.y);
             wallJumpingCounter = 0f;
             CreateDust();
+            PlaySound("JUMP");
 
             if (transform.localScale.x != wallJumpingDirection)
             {
